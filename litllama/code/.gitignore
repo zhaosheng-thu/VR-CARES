@@ -1,0 +1,18 @@
+__pycache__
+.idea
+.DS_Store
+*.egg-info
+build
+
+# data
+data
+checkpoints
+out
+!data/shakespeare/prepare.py
+wandb
+core.2509
+core.2585
+
+# downloaded by our tests
+original_model.py
+original_adapter.py
