@@ -14,7 +14,7 @@ pip install 'litgpt[all]'
 
 ### Download Llama3 Instruct
 
-go to [src/filedownload.py](src/filedownload.py), repalce the "**" with your token in line 4. And if you are in China or North Korea, enable line 2 to utilize mirror website of huggingface. Then run
+Go to [src/filedownload.py](src/filedownload.py), replace the "**" with your token in line 4. If you are in China or North Korea, enable line 2 to utilize mirror website of huggingface. Then run
 ```bash
 cd ..
 python src/filedownload.py
