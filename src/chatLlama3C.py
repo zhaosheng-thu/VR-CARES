@@ -37,30 +37,20 @@ tokenizer.pad_token = tokenizer.eos_token
 # init the dialogue with the background tokens
 background_dialogue = '''<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
-        {{ You are a helpful assistant designed for emotion support task. "
-        "Now there is a scene }}<|eot_id|><|start_header_id|>user<|end_header_id|>
-
-        {{ Hello, can you help me? }}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n'''
-
-background_tokens = tokenizer(background_dialogue, return_tensors="pt").input_ids
-print("background_tokens: ", background_tokens)
-if torch.cuda.is_available():
-    background_tokens = background_tokens.to('cuda')
-
-generate_starts = model.generate(input_ids=background_tokens, max_new_tokens=64, eos_token_id=tokenizer.eos_token_id,)
-text_starts = tokenizer.decode(generate_starts[0])
-print("text_starts: ", text_starts)
-
+        {{ You are a helpful assistant"
+        }}'''
+        
+text_starts = background_dialogue
 # start the conversation
 rounds = 5
-# text_starts = ""
-dialogue = "".join([text_starts, '<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n'])
+
+dialogue = "".join([text_starts, '<|eot_id|>\n<|start_header_id|>user<|end_header_id|>\n\n'])
 
 for i in range(rounds): 
     print("Round: ", i + 1)
     new_input = input("You: ")
     
-    dialogue += f'{{{{{ {new_input} }}}}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n'
+    dialogue += f'{{{{{ {new_input} }}}}}<|eot_id|>\n<|start_header_id|>assistant<|end_header_id|>\n\n'
     # 将对话转换为模型可以理解的输入
     input_ids = tokenizer([dialogue], return_tensors="pt", add_special_tokens=False).input_ids
     if torch.cuda.is_available():
@@ -90,5 +80,5 @@ for i in range(rounds):
     output = "".join([remove_incomplete_sentence(output), ''])
     print(f"\nAssistant: {output}\n")
     # 更新对话，准备下一轮
-    dialogue += f'{{{{{ output }}}}}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n'
+    dialogue += f'{{{{{ output }}}}}<|eot_id|>\n<|start_header_id|>user<|end_header_id|>\n\n'
 
